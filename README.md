@@ -17,9 +17,15 @@ That's it!  A development server will start running and you can see all the requ
 
 ## Training Data
 
-![Training Image]("/digits.png")
+![Training Data](https://github.com/mandhyan/handwrittingOCR/blob/master/digits.png)
 
-![Dashboard Screenshot]("/screenshot.png")
+
+Note: Each block of digit is 20px * 20px.  So, 500 images per digit.  
+
+## Dashboard 
+
+
+![Dashboard Screenshot](https://github.com/mandhyan/handwrittingOCR/blob/master/screenshot.png)
 
 
 
