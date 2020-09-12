@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+<!-- Bootstrap core CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+<!-- Material Design Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/css/mdb.min.css" rel="stylesheet">
+  <!-- JQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/js/mdb.min.js"></script>
+  <title>IP Project</title>
+</head>
+<body>
+  <nav class="navbar navbar-dark indigo">
+  <span class="navbar-text white-text">
+    Handwritten Digit Recognition Project.
+  </span>
+</nav>
+<div class="container">
+<div class="row mt-3">
+  <div class="col-6 offset-3 text-center">
+<canvas id="draw" width="100" height="100"></canvas>
+<div class="row">
+  <div class="col">
+    <button type="button" class="btn btn-primary" id="submit" class="submit"> Submit and Check </button>
+  </div>
+  <div class="col">
+    <button type="button" class="btn btn-primary" id="reset" class="reset"> Reset </button>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <div class="h3">
+    Answer: <span class="text-primary" id="answer"> </span>
+    </div> 
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</body>
+
+<style>
+  html, body {
+    margin:0;
+    background-color: #e9e9e9;
+  }
+  #draw {
+    border:2px solid red;
+    background-color: #000000;
+  }
+</style>
+
+<script>
+  var canvas = document.querySelector('#draw');
+  // could be 3d, if you want to make a video game
+  const ctx = canvas.getContext('2d');
+
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 15;
+  ctx.strokeStyle = '#e9e9e9';
+
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+
+  function draw(e) {
+    // stop the function if they are not mouse down
+    if(!isDrawing) return;
+    //listen for mouse move event
+    console.log(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  }
+
+  canvas.addEventListener('mousedown', (e) => {
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+  });
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  canvas.addEventListener('mouseout', () => isDrawing = false);
+
+  $(document).ready(function(){
+    $('#reset').click(function(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      $('#answer').text(' ');
+    });
+
+    $('#submit').click(function(){
+
+      var src= canvas.toDataURL('image/png');
+      
+ 
+
+$.ajax({
+  type: "POST",
+  url: "/getImage",
+  data: { 
+     imgBase64: src
+  },
+  success:function(result){
+
+    answer=JSON.parse(result);
+
+    $('#answer').text(answer['Answer']);
+  },
+  error:function(result){
+    $("#answer").text("We ran into an error.");
+  }
+}).done(function(o) {
+  console.log('saved'); 
+
+});
+      
+    });
+  })
+</script>
+</html>
